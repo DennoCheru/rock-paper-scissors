@@ -9,11 +9,6 @@ function getComputerChoice() {
     }
 }
 
-function getHumanChoice() {
-    const choice = prompt("Enter your choice:(rock/ paper/ scissors) ")
-    return choice.toLowerCase();
-}
-
 function playGame() {
     let humanScore = 0;
     let computerScore = 0;
@@ -34,21 +29,69 @@ function playGame() {
             return `You lose! ${computerChoice} beats ${humanChoice}`;
         }
     }
-    
-    for (let round = 1; round <= 5; round++) {
-        const humanChoice = getHumanChoice();
-        const computerChoice = getComputerChoice();
-        console.log(playRound(humanChoice, computerChoice));
+
+    const rock = document.querySelector("#rock");
+    const paper = document.querySelector("#paper");
+    const scissors = document.querySelector("#scissors");
+    const result = document.querySelector("#result");
+    const compScore = document.querySelector("#compScore");
+    const playerScore = document.querySelector("#playerScore");
+    const winner = document.querySelector("#winner");
+    const resetButton = document.querySelector("#reset")
+
+    rock.addEventListener ('click', () => {
+        const outcome = playRound('rock', getComputerChoice());
+        result.textContent = outcome;
+        updateScore();
+        checkWinner();
+    });
+
+    paper.addEventListener('click', () => {
+        const outcome = playRound('paper', getComputerChoice());
+        result.textContent = outcome;
+        updateScore();
+        checkWinner();
+    });
+
+    scissors.addEventListener('click', () => {
+        const outcome = playRound ('scissors', getComputerChoice());
+        result.textContent = outcome;
+        updateScore();
+        checkWinner();
+    });
+
+    resetButton.addEventListener('click', resetGame);
+
+    function updateScore() {
+        playerScore.textContent = humanScore;
+        compScore.textContent = computerScore;
     }
 
-    if (computerScore > humanScore) {
-        return `Computer Wins ${computerScore} to ${humanScore}!`;
-    } else if(humanScore > computerScore) {
-        return `You win ${humanScore} to ${computerScore}!`;
-    } else {
-        return `It's a tie! You: ${humanScore} Computer: ${computerScore}`
+    function checkWinner() {
+        if (humanScore === 5) {
+            winner.textContent = "Congratulations! You won the game."
+            disableButtons();
+        } else if (computerScore === 5) {
+            winner.textContent = "Game over! The computer won.";
+            disableButtons();
+        }
+    }
+
+    function disableButtons() {
+        rock.disabled = true;
+        paper.disabled = true;
+        scissors.disabled = true;
+    }
+
+    function resetGame(){
+        humanScore = 0;
+        computerScore = 0;
+        updateScore();
+        result.textContent = '';
+        winner.textContent = '';
+        rock.disabled = false;
+        paper.disabled = false;
+        scissors.disabled = false;
     }
 }
-console.log(playGame());
-
-
+playGame();
